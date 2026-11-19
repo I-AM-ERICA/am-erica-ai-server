@@ -1,0 +1,57 @@
+name: america-ai-cpu
+x-service: &service
+  init: true
+  restart: unless-stopped
+  read_only: true
+  tmpfs: [/tmp]
+  stop_grace_period: 40s
+  security_opt: [no-new-privileges:true]
+  logging:
+    driver: json-file
+    options: {max-size: 10m, max-file: '3'}
+services:
+  promotion:
+    <<: *service
+    image: america-ai-promotion:local
+    build: {context: ../.., dockerfile: services/promotion/Dockerfile}
+    environment:
+      AI_INTERNAL_KEY: ${AI_INTERNAL_KEY:?Set AI_INTERNAL_KEY}
+      CLOVA_STUDIO_API_KEY: ${CLOVA_STUDIO_API_KEY:?Set CLOVA_STUDIO_API_KEY}
+      POSTER_PUBLIC_BASE_URL: ${POSTER_PUBLIC_BASE_URL:?Set POSTER_PUBLIC_BASE_URL}
+      POSTER_TIMEOUT_SECONDS: ${POSTER_TIMEOUT_SECONDS:-70}
+    ports:
+      - '${GRPC_BIND_HOST:-127.0.0.1}:${PROMOTION_PORT:-50052}:50052'
+      - '${POSTER_HTTP_BIND_HOST:-127.0.0.1}:${POSTER_HTTP_PORT:-8081}:8081'
+    volumes:
+      - promotion-data:/data
+      - promotion-cache:/cache
+    healthcheck:
+      test: [CMD, python, -m, runtime.healthcheck, '127.0.0.1:50052', america.ai.v1.PromotionAssistant]
+      interval: 15s
+      timeout: 7s
+      retries: 4
+      start_period: 25m
+  management:
+    <<: *service
+    image: america-ai-management:local
+    build: {context: ../.., dockerfile: services/management/Dockerfile}
+    environment:
+      AI_INTERNAL_KEY: ${AI_INTERNAL_KEY:?Set AI_INTERNAL_KEY}
+      CUDA_VISIBLE_DEVICES: ''
+      CHRONOS_MODEL_PATH: /models/management
+    ports: ['${GRPC_BIND_HOST:-127.0.0.1}:${MANAGEMENT_PORT:-50054}:50054']
+    volumes:
+      - type: bind
+        source: ${CHRONOS_MODEL_DIR:?Set CHRONOS_MODEL_DIR}
+        target: /models/management
+        read_only: true
+        bind: {create_host_path: false}
+    healthcheck:
+      test: [CMD, python, -m, runtime.healthcheck, '127.0.0.1:50054', america.ai.v1.ManagementAssistant]
+      interval: 15s
+      timeout: 7s
+      retries: 4
+      start_period: 3m
+volumes:
+  promotion-data:
+  promotion-cache:

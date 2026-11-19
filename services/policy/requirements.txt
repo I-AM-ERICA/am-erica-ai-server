@@ -1,0 +1,15 @@
+# Runtime subset of Search-R1 requirements.txt; training/notebook packages excluded.
+torch==2.6.0
+transformers==4.51.3
+peft==0.15.2
+accelerate==1.6.0
+bitsandbytes==0.45.5
+safetensors==0.5.3
+numpy==1.26.4
+PyYAML==6.0.2
+sentencepiece==0.2.0
+huggingface-hub==0.30.2
+grpcio==1.85.3
+grpcio-tools==1.85.3
+grpcio-health-checking==1.85.3
+protobuf==7.36.2

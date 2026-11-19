@@ -1,0 +1,10 @@
+fastapi==0.163.1
+uvicorn==0.54.0
+pydantic==2.14.3
+httpx==0.28.1
+Pillow==12.3.0
+grpcio==1.85.1
+grpcio-health-checking==1.85.1
+protobuf==7.36.2
+python-dotenv==1.2.4
+rembg[cpu]==2.0.87

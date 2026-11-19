@@ -1,0 +1,10 @@
+{
+  "variant": "sft_epoch1",
+  "checkpoint": "outputs/policy-sft-lr1e4-20261116T064528Z-436751/training/checkpoint-00006",
+  "status": "provisional_mvp_candidate",
+  "reason": "In four held-out Korean questions, epoch1 gave the clearest correct positive funding answer. Raw RPC success alone was not scored as correctness. Guarded extraction needed fallback for all models; superiority is not established.",
+  "comparison": "outputs/policy-mvp-live-20261116/results.jsonl",
+  "final_pipeline_comparison": "outputs/policy-mvp-final-20261116/results.jsonl",
+  "limitation": "Two final search cases were blocked by SerpAPI quota exhaustion. No automatic generalization claim.",
+  "training": false
+}

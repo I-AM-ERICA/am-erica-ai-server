@@ -1,0 +1,90 @@
+name: america-ai-gpu
+x-service: &service
+  init: true
+  restart: unless-stopped
+  read_only: true
+  tmpfs: [/tmp]
+  stop_grace_period: 40s
+  security_opt: [no-new-privileges:true]
+  logging:
+    driver: json-file
+    options: {max-size: 10m, max-file: '3'}
+services:
+  policy:
+    <<: *service
+    image: america-ai-policy:local
+    build: {context: ../.., dockerfile: services/policy/Dockerfile}
+    environment:
+      AI_INTERNAL_KEY: ${AI_INTERNAL_KEY:?Set AI_INTERNAL_KEY}
+      SERPAPI_API_KEY: ${SERPAPI_API_KEY:?Set SERPAPI_API_KEY}
+      HF_TOKEN: ${HF_TOKEN:-}
+      HF_HUB_OFFLINE: ${HF_HUB_OFFLINE:-0}
+      POLICY_SEARCH_ENGINE: ${POLICY_SEARCH_ENGINE:-naver}
+      POLICY_REQUEST_TIMEOUT: ${POLICY_REQUEST_TIMEOUT:-85}
+    ports: ['${GRPC_BIND_HOST:-127.0.0.1}:${POLICY_PORT:-50051}:50051']
+    volumes:
+      - type: bind
+        source: ${POLICY_MODEL_DIR:?Set POLICY_MODEL_DIR}
+        target: /models/policy
+        read_only: true
+        bind: {create_host_path: false}
+      - policy-cache:/cache
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['${POLICY_GPU_ID:-0}']
+              capabilities: [gpu]
+    healthcheck:
+      test: [CMD, python, -m, runtime.healthcheck, '127.0.0.1:50051', america.ai.v1.PolicyAssistant]
+      interval: 15s
+      timeout: 7s
+      retries: 4
+      start_period: 25m
+  customer:
+    <<: *service
+    image: america-ai-customer:local
+    build: {context: ../.., dockerfile: services/customer/Dockerfile}
+    environment:
+      AI_INTERNAL_KEY: ${AI_INTERNAL_KEY:?Set AI_INTERNAL_KEY}
+      HF_TOKEN: ${HF_TOKEN:-}
+      HF_HUB_OFFLINE: ${HF_HUB_OFFLINE:-0}
+      CUSTOMER_DEVICE: cuda
+      CUSTOMER_MAX_WAITING: ${CUSTOMER_MAX_WAITING:-32}
+    ports: ['${GRPC_BIND_HOST:-127.0.0.1}:${CUSTOMER_PORT:-50053}:50053']
+    volumes:
+      - type: bind
+        source: ${CUSTOMER_ADAPTER_DIR:?Set CUSTOMER_ADAPTER_DIR}
+        target: /models/customer
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${CUSTOMER_DOCUMENTS_DIR:?Set CUSTOMER_DOCUMENTS_DIR}
+        target: /store-docs
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${CUSTOMER_STORE_ALIASES_FILE:?Set CUSTOMER_STORE_ALIASES_FILE}
+        target: /app/store-aliases.json
+        read_only: true
+        bind: {create_host_path: false}
+      - customer-cache:/cache
+      - customer-data:/data
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['${CUSTOMER_GPU_ID:-0}']
+              capabilities: [gpu]
+    healthcheck:
+      test: [CMD, python, -m, runtime.healthcheck, '127.0.0.1:50053', america.ai.v1.CustomerAssistant]
+      interval: 15s
+      timeout: 7s
+      retries: 4
+      start_period: 25m
+volumes:
+  policy-cache:
+  customer-cache:
+  customer-data:

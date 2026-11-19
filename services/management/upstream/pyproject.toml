@@ -1,0 +1,117 @@
+[project]
+name = "chronos-forecasting"
+version = "1.5.3"
+authors = [
+  { name = "Abdul Fatir Ansari", email = "ansarnd@amazon.com" },
+  { name = "Lorenzo Stella", email = "stellalo@amazon.com" },
+  { name = "Caner Turkmen", email = "atturkm@amazon.com" },
+]
+description = "UCI Online Retail II daily-revenue forecasting and model comparison built on Chronos"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.9"
+dependencies = ["torch>=2.0,<3", "transformers>=4.48,<5", "accelerate>=0.32,<2"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/chronos", "src/chronos_sales"]
+
+[project.scripts]
+chronos-sales = "chronos_sales.cli:app"
+
+[project.optional-dependencies]
+management = [
+  "numpy>=1.21,<3",
+  "grpcio>=1.85.3,<2",
+  "grpcio-health-checking>=1.85.3,<2",
+  "grpcio-tools==1.85.3",
+  "protobuf>=7.35.1,<8",
+]
+test = ["pytest~=8.0", "numpy>=1.21,<3", "httpx>=0.27,<1"]
+typecheck = ["mypy~=1.9", "types-PyYAML", "types-requests"]
+assistant = [
+  "altair>=5,<6",
+  "pandas>=2,<3",
+  "requests>=2.31,<3",
+  "streamlit>=1.39,<2",
+]
+api = [
+  "fastapi>=0.115,<1",
+  "python-multipart>=0.0.12,<1",
+  "uvicorn[standard]>=0.30,<1",
+]
+training = [
+  "gluonts[pro]~=0.15",
+  "numpy>=1.21,<3",
+  "datasets>=2.18,<4",
+  "typer",
+  "typer-config",
+  "joblib",
+  "scikit-learn",
+  "tensorboard",
+]
+evaluation = [
+  "gluonts[pro]~=0.15",
+  "numpy>=1.21,<3",
+  "datasets>=2.18,<4",
+  "typer",
+]
+sales = [
+  "datasets>=2.18,<4",
+  "gluonts[pro]~=0.15",
+  "ipykernel",
+  "joblib",
+  "jupyterlab",
+  "matplotlib>=3.7",
+  "nbconvert",
+  "numpy>=1.21,<3",
+  "openpyxl>=3.1",
+  "pandas>=2,<3",
+  "pyarrow>=14",
+  "pyyaml>=6",
+  "scikit-learn",
+  "tensorboard",
+  "tqdm",
+  "typer",
+  "typer-config",
+]
+tree-models = [
+  "xgboost==2.1.4",
+  "catboost==1.2.8",
+]
+comparison-models = [
+  "xgboost==2.1.4",
+  "catboost==1.2.8",
+  "statsforecast==2.0.3",
+]
+
+[project.urls]
+Homepage = "https://github.com/I-AM-ERICA/Chronos"
+Issues = "https://github.com/I-AM-ERICA/Chronos/issues"
+Upstream = "https://github.com/amazon-science/chronos-forecasting"
+Paper = "https://arxiv.org/abs/2403.07815"
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+markers = [
+  "integration: loads a real local model checkpoint and runs slower inference",
+]
+
+[tool.ruff]
+line-length = 88
+lint.ignore = [
+  "E501", # Line too long
+  "E731", # Do not assign a `lambda` expression, use a `def`
+  "E722", # Do not use bare `except`
+]

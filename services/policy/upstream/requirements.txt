@@ -1,0 +1,18 @@
+# 역할: 로컬 개발 및 Linux GPU 서버의 첫 실험용 Python 라이브러리 버전을 고정합니다.
+# Python 3.10 또는 3.11. GPU 서버의 CUDA PyTorch는 README의 명령으로 먼저 설치합니다.
+torch==2.6.0
+transformers==4.51.3
+peft==0.15.2
+accelerate==1.6.0
+# 이 버전은 macOS를 지원하지 않습니다. 4-bit GPU 학습용 Linux 환경에서만 설치합니다.
+bitsandbytes==0.45.5; sys_platform == "linux"
+safetensors==0.5.3
+numpy==1.26.4
+PyYAML==6.0.2
+sentencepiece==0.2.0
+jupyterlab==4.4.2
+ipykernel==6.29.5
+matplotlib==3.10.1
+pytest==8.3.5
+pyarrow==19.0.1
+huggingface-hub==0.30.2

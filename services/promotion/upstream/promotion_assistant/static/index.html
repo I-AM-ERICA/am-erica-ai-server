@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>홍보 비서 · ERICA</title><link rel="stylesheet" href="/studio/studio.css"></head>
+<body>
+<header class="topbar"><a class="brand" href="/">ERICA<span>가게의 든든한 동료</span></a><span class="workspace-label">홍보 스튜디오</span><span id="mode" class="mode"></span></header>
+<main>
+<section class="intro"><div><p class="eyebrow">YOUR NEXT GOOD IMPRESSION</p><h1>우리 가게의 매력,<br><em>한 장에 담아볼까요?</em></h1><p>사진 한 장과 전하고 싶은 소식이면 충분해요.</p></div><div class="intro-note"><span>01 입력</span><i>→</i><span>02 시안 선택</span><i>→</i><span>03 수정 · 저장</span></div></section>
+<div class="workspace">
+<form id="brief-form" class="input-panel panel">
+<div class="section-head"><h2>어떤 소식을 전할까요?</h2><button type="button" id="sample" class="text-button">예시 채우기</button></div>
+<p id="sample-note" class="note" hidden>예시 상품 일러스트와 가상 매장 정보입니다. 실제 게시 전 교체해 주세요.</p>
+<fieldset id="fields">
+<label class="upload" for="product-image"><img id="product-preview" alt="선택한 상품 사진" hidden><span id="upload-label"><b>＋</b><strong>상품 사진 올리기</strong><small>JPG · PNG · WEBP / 최대 5MB</small></span></label>
+<input id="product-image" type="file" accept="image/png,image/jpeg,image/webp" class="file-input">
+<div class="upload-actions"><span>사진 없이 문구 중심으로도 만들 수 있어요.</span><button type="button" id="remove-image" class="text-button" hidden>제거</button></div>
+<label for="store">가게 이름 <span>*</span></label><input id="store" required maxlength="40" placeholder="예: 오후의 베이커리">
+<label for="product">홍보할 상품 <span>*</span></label><input id="product" required maxlength="100" placeholder="예: 아메리카노, 꽃다발, 운동화">
+<label for="message">꼭 전하고 싶은 소식</label><textarea id="message" rows="3" maxlength="500" placeholder="상품 소개, 행사 내용, 꼭 들어가야 할 문구를 적어 주세요."></textarea>
+<div class="two-cols"><div><label for="price">판매 가격 <small>선택 · 원</small></label><input id="price" type="number" min="0" max="999999999" step="1" placeholder="3,500"></div><div><label for="original-price">할인 전 가격 <small>선택</small></label><input id="original-price" type="number" min="1" max="999999999" step="1" placeholder="4,000"></div></div>
+<details><summary>기간·연락처 추가 <small>선택</small></summary>
+<label for="period">행사 기간 <small>선택</small></label><input id="period" maxlength="60" placeholder="예: 11월 20일 – 11월 27일">
+<label for="contact">방문 · 문의 안내 <small>선택</small></label><input id="contact" maxlength="100" placeholder="예: 성수역 2번 출구 · 매장 포장 가능">
+</details>
+<details><summary>사진·디자인 더 설정하기 <small>선택</small></summary>
+<label for="tone">원하는 분위기</label><select id="tone"><option>따뜻하고 친근하게</option><option>깔끔하고 담백하게</option><option>눈에 띄고 활기차게</option><option>차분하고 고급스럽게</option></select>
+<label for="background-mode">상품 사진 배경</label><select id="background-mode"><option value="auto">알아서 정리해 주세요</option><option value="remove">배경 제거하기</option><option value="keep">원본 배경 유지</option></select>
+<label for="logo">가게 로고</label><input id="logo" type="file" accept="image/png,image/jpeg,image/webp"><label for="reference">마음에 드는 광고 스타일</label><input id="reference" type="file" accept="image/png,image/jpeg,image/webp"><p class="note">색 조합과 여백, 글씨·사진 배치의 느낌을 참고해 우리 상품에 어울리게 만들어요.</p></details>
+</fieldset>
+<button class="primary generate" id="generate" type="submit"><span>✦</span> 포스터 3개 만들기</button>
+<p class="note">가격과 기간은 입력한 정보 그대로 표시됩니다.</p>
+</form>
+<section class="results" aria-label="포스터 제작 결과">
+<div class="section-head"><div><p class="eyebrow">MADE FOR YOUR STORE</p><h2>어떤 한 장이 마음에 드세요?</h2></div><span id="count" class="count">시안 3개</span></div>
+<div id="status" class="status" role="status" aria-live="polite"></div><div id="error" class="error" role="alert" hidden></div>
+<div id="empty" class="empty-state"><div class="paper-stack"><div class="paper p1"><span>작은 가게의<br>큰 매력</span><i></i></div><div class="paper p2"><small>OUR SIGNATURE</small><span>좋은 하루,<br>좋은 한입.</span><i></i></div><div class="paper p3"><span>오늘을<br>더 특별하게</span><i></i></div></div><h3>가게만의 분위기를 찾아보세요</h3><p>상품 정보로 서로 다른 세 가지 시안을 만들어요.<br>마음에 드는 한 장을 골라 더 다듬어 보세요.</p><div class="tags"><span>12가지 템플릿</span><span>자연어 수정</span><span>PNG 저장</span></div></div>
+<div id="drafts" class="draft-grid" hidden></div>
+<p id="image-status" class="note" role="status" hidden></p>
+<section id="editor" class="editor panel" hidden>
+<div class="section-head"><div><span id="selected-label" class="eyebrow"></span><h2>이대로 저장하거나, 조금 더 다듬어요</h2></div><a id="download" class="primary" download="poster.png">↓ 이미지 저장</a></div>
+<label for="instruction">어떻게 바꾸고 싶으세요?</label><div class="edit-row"><input id="instruction" maxlength="500" placeholder="예: 배경은 초록색으로, 가격을 더 강조해줘"><button id="revise" class="primary" type="button">수정하기</button></div>
+<div class="suggestions"><button type="button" data-edit="배경을 초록색으로 바꿔줘">초록색으로</button><button type="button" data-edit="가격을 더 강조해줘">가격 강조</button><button type="button" data-edit="제목을 고운돋움으로 바꿔줘">부드러운 글씨</button><button type="button" data-edit="사진 전체가 보이게 해줘">사진 전체 보기</button></div>
+<details class="font-picker"><summary>글꼴 바꾸기 <small>선택</small></summary><label for="font-select">제목 글꼴</label><div class="edit-row"><select id="font-select"></select><button id="font-apply" class="primary" type="button">글꼴 적용</button></div><p id="font-description" class="note"></p><img id="font-preview" alt="선택한 제목 글꼴 미리보기" width="800" height="130"><p class="note">상업용 포스터에 사용할 수 있는 무료 글꼴입니다.</p></details>
+<details><summary>다른 분위기 둘러보기 <small>선택</small></summary><div id="templates" class="template-grid"></div></details>
+<div class="caption"><div class="section-head"><h3>함께 올릴 홍보 문구</h3><button id="copy-caption" class="text-button" type="button">복사</button></div><pre id="caption"></pre></div>
+<p class="note">가격·상품·기간을 바꾸려면 왼쪽 정보를 수정하고 새 시안을 만들어 주세요. 게시 전 문구와 행사 정보를 확인해 주세요.</p>
+</section>
+<p class="footnote">1080 × 1350 px · 원본 상품 사진 보존 · 수정할 때마다 새 버전 저장</p>
+</section>
+</div>
+</main>
+<footer>ERICA <span>좋은 가게의 이야기가 더 멀리 닿도록.</span></footer>
+<script id="studio-config" type="application/json">__CONFIG__</script><script src="/studio/studio.js" defer></script>
+</body></html>
